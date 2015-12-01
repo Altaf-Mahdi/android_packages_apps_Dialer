@@ -74,6 +74,8 @@ import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.nispok.snackbar.SnackbarManager;
+
 import com.android.contacts.common.activity.TransactionSafeActivity;
 import com.android.contacts.common.dialog.ClearFrequentsDialog;
 import com.android.contacts.common.interactions.ImportExportDialogFragment;
@@ -741,6 +743,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         if (mSlideOut.hasStarted() && !mSlideOut.hasEnded()) {
             commitDialpadFragmentHide();
         }
+        // Dismiss snackbar
+        SnackbarManager.dismiss();
         super.onPause();
     }
 
@@ -1532,6 +1536,9 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         } else if (tabIndex != ListsFragment.TAB_INDEX_SPEED_DIAL) {
             mFloatingActionButtonController.onPageScrolled(1);
         }
+
+        // Dismiss snackbar
+        SnackbarManager.dismiss();
     }
 
     @Override

@@ -14,6 +14,7 @@
 
 package com.android.dialer.calllog;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -30,7 +31,11 @@ import android.provider.Telephony;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
+import android.widget.FrameLayout;
+
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.listeners.EventListener;
 
 import com.android.contacts.common.util.Constants;
 import com.android.contacts.common.util.PermissionsUtil;
@@ -533,10 +538,11 @@ public class ContactInfoHelper {
         Uri uri = Uri.withAppendedPath(Telephony.Blacklist.CONTENT_FILTER_BYNUMBER_URI, number);
         int count = mContext.getContentResolver().update(uri, cv, null, null);
 
+        // show a snackbar message
         if (count != 0) {
-            // Give the user some feedback
-            String message = mContext.getString(R.string.toast_added_to_blacklist, number);
-            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+            String message = mContext.getString(
+                    R.string.toast_added_to_blacklist, number);
+            showBlacklistSnackbar(message);
         }
     }
 
@@ -549,11 +555,61 @@ public class ContactInfoHelper {
         Uri uri = Uri.withAppendedPath(Telephony.Blacklist.CONTENT_FILTER_BYNUMBER_URI, number);
         int count = mContext.getContentResolver().delete(uri, null, null);
 
+        // show a snackbar message
         if (count != 0) {
-            // Give the user some feedback
-            String message = mContext.getString(R.string.toast_removed_from_blacklist, number);
-            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+            String message = mContext.getString(
+                    R.string.toast_removed_from_blacklist, number);
+            showBlacklistSnackbar(message);
         }
+    }
+
+    /**
+     * Snackbar message which displays the number being added/removed from phone blacklist
+     *
+     * @param message, message to be shown
+     */
+    private void showBlacklistSnackbar(String message) {
+        Activity realActivity = ((Activity)mContext).getParent();
+        if (realActivity == null) {
+            realActivity = (Activity)mContext;
+        }
+        final FrameLayout fabView = (FrameLayout) realActivity.findViewById(
+                R.id.floating_action_button_container);
+        SnackbarManager.show(
+            Snackbar.with(mContext)
+                .text(message)
+                .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
+                .color(mContext.getResources().getColor(
+                        R.color.call_log_action_text))
+                .eventListener(new EventListener() {
+                    @Override
+                    public void onShow(Snackbar snackbar) {
+                        if (fabView != null) {
+                            fabView.animate().translationY(-snackbar.getHeight()).start();
+                        }
+                    }
+
+                    @Override
+                    public void onDismiss(Snackbar snackbar) {
+                        if (fabView != null) {
+                            fabView.animate().translationY(0).start();
+                        }
+                    }
+
+                    @Override
+                    public void onShowByReplace(Snackbar snackbar) {}
+
+                    @Override
+                    public void onShown(Snackbar snackbar) {}
+
+                    @Override
+                    public void onDismissByReplace(Snackbar snackbar) {}
+
+                    @Override
+                    public void onDismissed(Snackbar snackbar) {}
+
+                })
+            , realActivity);
     }
 
     private void logSuccessfulFetch(LookupProvider mLookupProvider) {

@@ -1210,7 +1210,6 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             mListsFragment.getView().animate().alpha(0).withLayer();
         }
 
-        mSearchView.clearFocus();
         mListsFragment.setUserVisibleHint(false);
     }
 

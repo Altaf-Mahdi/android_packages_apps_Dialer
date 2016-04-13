@@ -568,7 +568,7 @@ public class ContactInfoHelper {
      *
      * @param message, message to be shown
      */
-    private void showBlacklistSnackbar(String message) {
+    void showBlacklistSnackbar(String message) {
         Activity realActivity = ((Activity)mContext).getParent();
         if (realActivity == null) {
             realActivity = (Activity)mContext;

@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.contacts.common.GeoUtil;
 import com.android.contacts.common.util.BlockContactHelper;
 import com.android.dialer.R;
 import com.cyanogen.lookup.phonenumber.provider.LookupProviderImpl;
@@ -37,6 +38,7 @@ public class BlockContactPresenter implements View.OnClickListener,
     private Activity mActivity;
     private Fragment mTargetFragment;
     private BlockContactHelper mBlockContactHelper;
+    private ContactInfoHelper mContactInfoHelper;
 
     private BlockContactViewHolder mViewHolder;
 
@@ -53,6 +55,9 @@ public class BlockContactPresenter implements View.OnClickListener,
             mBlockContactHelper.setStatusListener(this);
         }
         mBlockContactHelper.setContactInfo(number);
+
+        String currentCountryIso = GeoUtil.getCurrentCountryIso(mActivity);
+        mContactInfoHelper = new ContactInfoHelper(mActivity, currentCountryIso);
     }
 
     @Override
@@ -97,10 +102,16 @@ public class BlockContactPresenter implements View.OnClickListener,
 
     public void onBlockSelected(boolean notifyProvider) {
         mBlockContactHelper.blockContactAsync(notifyProvider);
+        String message = mActivity.getString(
+                R.string.toast_added_to_blacklist);
+        mContactInfoHelper.showBlacklistSnackbar(message);
     }
 
     public void onUnblockSelected(boolean notifyProvider) {
         mBlockContactHelper.unblockContactAsync(notifyProvider);
+        String message = mActivity.getString(
+                R.string.toast_removed_from_blacklist);
+        mContactInfoHelper.showBlacklistSnackbar(message);
     }
 
     public void disable() {

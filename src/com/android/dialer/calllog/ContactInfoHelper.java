@@ -26,7 +26,6 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.DisplayNameSources;
 import android.provider.ContactsContract.PhoneLookup;
-import android.provider.Settings;
 import android.provider.Telephony;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
@@ -515,15 +514,6 @@ public class ContactInfoHelper {
     public boolean canReportAsInvalid(int sourceType, String objectId) {
         return mCachedNumberLookupService != null
                 && mCachedNumberLookupService.canReportAsInvalid(sourceType, objectId);
-    }
-
-    /**
-     * Checks whether calls can be blacklisted; that is, whether the
-     * phone blacklist is enabled
-     */
-    public boolean canBlacklistCalls() {
-        return Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.PHONE_BLACKLIST_ENABLED, 1) != 0;
     }
 
     /**

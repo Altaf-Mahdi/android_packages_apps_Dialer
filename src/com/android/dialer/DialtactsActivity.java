@@ -361,7 +361,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         updateSmartDialDatabase();
         mAvailableProviders.clear();
         CallMethodFilters.removeDisabled(availableCallMethods, mAvailableProviders);
-        if (mSmartDialSearchFragment != null) {
+        if (mSmartDialSearchFragment != null && mSmartDialSearchFragment.isVisible()
+                && mInDialpadSearch) {
             mSmartDialSearchFragment.setAvailableProviders(mAvailableProviders);
         }
 

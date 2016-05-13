@@ -58,7 +58,7 @@ public class BlockContactPresenter implements View.OnClickListener,
         mBlockContactHelper.setContactInfo(number);
 
         String currentCountryIso = GeoUtil.getCurrentCountryIso(mActivity);
-        mContactInfoHelper = new ContactInfoHelper(mActivity, currentCountryIso);
+        mContactInfoHelper = new ContactInfoHelper(mActivity, currentCountryIso, null);
     }
 
     @Override
